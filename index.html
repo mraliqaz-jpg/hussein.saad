@@ -8,7 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-:root{--navy:#14304a;--teal:#0f8b8d;--gold:#e0a526;--bg:#eef2f6;--line:#d8e0e8}
+:root{--navy:#14304a;--teal:#0f8b8d;--gold:#e0a526;--bg:#eef2f6;--line:#d8e0e8;--pf:'Noto Naskh Arabic','Amiri','Traditional Arabic',serif}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);font-family:'Cairo',sans-serif;color:#1d2b3a}
 header{background:linear-gradient(120deg,var(--navy),#1d4a6e);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
@@ -22,7 +22,7 @@ header small{display:block;font-weight:500;opacity:.75;font-size:12px}
 .card h3{margin:0 0 10px;font-size:15px;color:var(--navy);display:flex;align-items:center;gap:6px}
 .card h3 i{font-style:normal;background:var(--teal);color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px}
 label{display:block;font-size:13px;color:#5a6b7d;margin:8px 0 4px}
-.in{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:9px 11px;font-family:'Noto Naskh Arabic',serif;font-weight:600;font-size:18px;color:#000;background:#fafcfe;outline:none}
+.in{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:9px 11px;font-family:var(--pf);font-weight:600;font-size:20px;color:#000;background:#fafcfe;outline:none}
 .in:focus{border-color:var(--teal);background:#fff}
 .in.warn{border-color:#d9534f;animation:sh .3s}
 @keyframes sh{25%{transform:translateX(4px)}75%{transform:translateX(-4px)}}
@@ -41,29 +41,30 @@ textarea.in{resize:none;line-height:1.7;height:210px}
 .meter div{height:100%;width:0;background:var(--teal);transition:.2s}
 .meter div.full{background:#d9534f}
 .cnt{font-size:12.5px;color:#5a6b7d;margin-top:4px;display:flex;justify-content:space-between}
-#frames{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.fr{border:2px solid var(--line);border-radius:10px;padding:4px;background:#fff;cursor:pointer;font-family:inherit;font-size:11.5px;color:#334;text-align:center}
+#frames{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.fr{border:2px solid var(--line);border-radius:10px;padding:4px;background:#fff;cursor:pointer;font-family:inherit;font-size:12px;color:#334;text-align:center}
 .fr.on{border-color:var(--teal);background:#effafa}
-.fr .th{height:78px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.fr .th svg,.fr .th img{height:100%;width:auto;border:1px solid #ddd;background:#fff}
-.fr .th span{font-size:22px;color:var(--teal)}
+.fr .th{height:84px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.fr .th svg{height:100%;width:auto;border:1px solid #ddd;background:#fff}
+.fr .th span{font-size:24px;color:#999}
 #preview{position:sticky;top:12px;display:flex;justify-content:center}
 #holder{position:relative}
-#stage{position:absolute;top:0;left:0;width:900px;height:1273px;background:#fff;transform-origin:top left;box-shadow:0 3px 18px rgba(0,0,0,.28);overflow:hidden;font-family:'Noto Naskh Arabic',serif;font-weight:600;font-size:30px;line-height:44px;color:#000}
+#stage{position:absolute;top:0;left:0;width:900px;height:1273px;background:#fff;transform-origin:top left;box-shadow:0 3px 18px rgba(0,0,0,.28);overflow:hidden;color:#000}
+#stage,#stage *{font-family:var(--pf);font-weight:600;color:#000;letter-spacing:0}
+.pt{font-size:30px;line-height:44px}
 #frame{position:absolute;inset:0;pointer-events:none}
-#frame svg,#frame img{width:100%;height:100%;display:block}
-.abs{position:absolute;white-space:nowrap;color:#000}
+#frame svg{width:100%;height:100%;display:block}
+.abs{position:absolute;white-space:nowrap}
 .hd{height:44px}
 .hr{right:140px}
-.hl{left:58px;width:242px;display:flex;overflow:hidden;align-items:center}
-.hl .v{font-size:26px}
+.hl{left:58px;width:330px;display:flex;overflow:hidden;align-items:center}
 .hl>span{flex:none}
 .row{left:80px;width:740px;display:flex;justify-content:center;align-items:center;overflow:hidden;height:44px}
 .row>span{flex:none}
 .row .sep{display:none;margin:0 10px}.row .sep.show{display:inline}
 .ft{left:120px;width:400px;text-align:center}
 #pbody{position:absolute;left:85px;top:404px;width:730px;height:624px;overflow:hidden}
-#bodyIn{white-space:pre-wrap;overflow-wrap:break-word;font-size:28px;line-height:39px;text-align:right;direction:rtl;color:#000;font-weight:600}
+#bodyIn{white-space:pre-wrap;overflow-wrap:normal;word-break:normal;font-size:30px;line-height:39px;text-align:right;direction:rtl}
 [data-for]{cursor:pointer}
 #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:9px 16px;border-radius:20px;font-size:14px;opacity:0;transition:.3s;pointer-events:none;z-index:30}
 #toast.show{opacity:1}
@@ -89,19 +90,18 @@ textarea.in{resize:none;line-height:1.7;height:210px}
   <div class="card">
     <h3><i>1</i>اختر الإطار</h3>
     <div id="frames"></div>
-    <input type="file" id="upl" accept="image/*" hidden>
   </div>
 
   <div class="card">
     <h3><i>2</i>بيانات الكتاب</h3>
     <label>العدد</label>
-    <input class="in" id="i_num" autocomplete="off" placeholder="مثال: 125">
+    <input class="in" id="i_num" autocomplete="off" placeholder="مثال 125">
     <label>التاريخ</label>
     <div class="rw"><input class="in" id="i_date" autocomplete="off" placeholder="2026/10/28"><button class="btn" id="today">اليوم</button></div>
-    <label>إلى : ديوان محافظة البصرة / (اكتب الجهة هنا)</label>
-    <input class="in" id="i_to" autocomplete="off" placeholder="مثال: شركة كي كارد">
-    <label>م : (الموضوع)</label>
-    <input class="in" id="i_subj" autocomplete="off" placeholder="مثال: طلب تزويد">
+    <label>إلى / ديوان محافظة البصرة / (اكتب الجهة هنا)</label>
+    <input class="in" id="i_to" autocomplete="off" placeholder="مثال شركة كي كارد">
+    <label>م / (الموضوع)</label>
+    <input class="in" id="i_subj" autocomplete="off" placeholder="مثال طلب تزويد">
   </div>
 
   <div class="card">
@@ -115,7 +115,7 @@ textarea.in{resize:none;line-height:1.7;height:210px}
     </div>
     <textarea class="in" id="i_body" placeholder="اكتب نص الكتاب هنا..."></textarea>
     <div class="meter"><div id="mbar"></div></div>
-    <div class="cnt"><span id="lcnt">الأسطر: 0 / 16</span><span id="scnt">الخط: 28</span></div>
+    <div class="cnt"><span id="lcnt">الأسطر 0 / 16</span><span id="scnt">الخط 30</span></div>
     <div class="chips" id="chips"></div>
   </div>
 
@@ -137,19 +137,19 @@ textarea.in{resize:none;line-height:1.7;height:210px}
     <div id="stage">
       <div id="frame"></div>
 
-      <div class="abs hd hr" style="top:131px">إدارة متوسطة</div>
-      <div class="abs hd hr" style="top:175px">المستقبل للبنين</div>
+      <div class="abs pt hd hr" style="top:131px">إدارة متوسطة</div>
+      <div class="abs pt hd hr" style="top:175px">المستقبل للبنين</div>
 
-      <div class="abs hd hl" style="top:131px" data-for="i_num"><span>العدد :</span><span>&nbsp;</span><span class="v" id="p_num"></span></div>
-      <div class="abs hd hl" style="top:175px" data-for="i_date"><span>التاريخ :</span><span>&nbsp;</span><span class="v" id="p_date"></span></div>
+      <div class="abs pt hd hl" style="top:131px" data-for="i_num"><span>العدد /</span><span>&nbsp;</span><span class="v" id="p_num"></span></div>
+      <div class="abs pt hd hl" style="top:175px" data-for="i_date"><span>التاريخ /</span><span>&nbsp;</span><span class="v" id="p_date"></span></div>
 
-      <div class="abs row" style="top:276px" data-for="i_to"><span>إلى : ديوان محافظة البصرة</span><span class="sep">/</span><span class="v" id="p_to"></span></div>
-      <div class="abs row" style="top:326px" data-for="i_subj"><span>م :</span><span>&nbsp;</span><span class="v" id="p_subj"></span></div>
+      <div class="abs pt row" style="top:276px" data-for="i_to"><span>إلى / ديوان محافظة البصرة</span><span class="sep">/</span><span class="v" id="p_to"></span></div>
+      <div class="abs pt row" style="top:326px" data-for="i_subj"><span>م /</span><span>&nbsp;</span><span class="v" id="p_subj"></span></div>
 
       <div id="pbody" data-for="i_body"><div id="bodyIn"></div></div>
 
-      <div class="abs ft" style="top:1053px">مدير المتوسطة</div>
-      <div class="abs ft" style="top:1098px">استاذ عبد الوهاب صبري حسين</div>
+      <div class="abs pt ft" style="top:1053px">مدير المتوسطة</div>
+      <div class="abs pt ft" style="top:1098px">استاذ عبد الوهاب صبري حسين</div>
     </div>
   </div>
 </section>
@@ -160,7 +160,7 @@ textarea.in{resize:none;line-height:1.7;height:210px}
 const $=s=>document.querySelector(s);
 const stage=$('#stage'),holder=$('#holder'),app=$('#app');
 const MAXLINES=16,LH=39;
-let S={num:'',date:'',to:'',subj:'',body:'',align:'right',size:28,frame:1,custom:''};
+let S={num:'',date:'',to:'',subj:'',body:'',align:'right',size:30,frame:1};
 let tt;
 
 /* ---------- الإطارات ---------- */
@@ -173,32 +173,17 @@ const FRAMES={
  2:SVG(`<rect x="30" y="30" width="840" height="1213" stroke-width="2"/><rect x="43" y="43" width="814" height="1187" stroke-width="7"/><rect x="60" y="60" width="780" height="1153" stroke-width="1.2"/><g fill="#000" stroke="none">${dia(450,36)}${dia(450,1237)}<path d="M36 626 l10 10 l-10 10 l-10 -10z"/><path d="M864 626 l10 10 l-10 10 l-10 -10z"/></g><g fill="#fff" stroke-width="3"><rect x="20" y="20" width="28" height="28"/><rect x="852" y="20" width="28" height="28"/><rect x="20" y="1225" width="28" height="28"/><rect x="852" y="1225" width="28" height="28"/></g><g fill="#000" stroke="none"><rect x="29" y="29" width="10" height="10"/><rect x="861" y="29" width="10" height="10"/><rect x="29" y="1234" width="10" height="10"/><rect x="861" y="1234" width="10" height="10"/></g>`),
  0:''
 };
-const FNAMES=[[1,'إطار 1'],[2,'إطار 2'],[0,'بدون إطار'],['c','إطارك']];
+const FNAMES=[[1,'إطار 1'],[2,'إطار 2'],[0,'بدون إطار']];
 function drawFrames(){
   const box=$('#frames');box.innerHTML='';
   FNAMES.forEach(([k,n])=>{
     const b=document.createElement('button');b.className='fr'+(S.frame===k?' on':'');
-    let th;
-    if(k==='c')th=S.custom?`<img src="${S.custom}">`:'<span>＋</span>';
-    else th=k===0?'<span style="color:#999">∅</span>':FRAMES[k];
-    b.innerHTML=`<div class="th">${th}</div>${n}`;
-    b.onclick=()=>{if(k==='c'&&!S.custom){$('#upl').click();return}S.frame=k;applyFrame();save()};
-    if(k==='c'&&S.custom){const r=document.createElement('div');r.style.cssText='font-size:11px;color:#2f7fd6;margin-top:2px;text-decoration:underline';r.textContent='تغيير الصورة';r.onclick=e=>{e.stopPropagation();$('#upl').click()};b.appendChild(r)}
+    b.innerHTML=`<div class="th">${k===0?'<span>∅</span>':FRAMES[k]}</div>${n}`;
+    b.onclick=()=>{S.frame=k;applyFrame();save()};
     box.appendChild(b);
   });
 }
-function applyFrame(){
-  const f=$('#frame');
-  if(S.frame==='c'&&S.custom)f.innerHTML=`<img src="${S.custom}">`;
-  else f.innerHTML=FRAMES[S.frame]||'';
-  drawFrames();
-}
-$('#upl').onchange=e=>{
-  const file=e.target.files[0];if(!file)return;
-  const rd=new FileReader();
-  rd.onload=()=>{S.custom=rd.result;S.frame='c';applyFrame();save();toast('تم تطبيق إطارك')};
-  rd.readAsDataURL(file);e.target.value='';
-};
+function applyFrame(){$('#frame').innerHTML=FRAMES[S.frame]||'';drawFrames()}
 
 /* ---------- مساعدات ---------- */
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1800)}
@@ -210,7 +195,7 @@ function fitText(apply,v,paste){
   while(lo<hi){const m=Math.ceil((lo+hi)/2);if(apply(v.slice(0,m)))lo=m;else hi=m-1}
   apply(v.slice(0,lo));return v.slice(0,lo);
 }
-function save(){try{localStorage.setItem('mustaqbal2',JSON.stringify({...S,custom:''}))}catch(e){}try{localStorage.setItem('mustaqbal2c',S.custom)}catch(e){}}
+function save(){try{localStorage.setItem('mustaqbal3',JSON.stringify(S))}catch(e){}}
 
 /* ---------- الحقول القصيرة ---------- */
 const FIELDS=['num','date','to','subj'].map(k=>{
@@ -232,10 +217,13 @@ $('#today').onclick=()=>{
 
 /* ---------- نص الكتاب ---------- */
 const ta=$('#i_body'),bodyIn=$('#bodyIn'),pbody=$('#pbody');
-function applyBody(v){bodyIn.textContent=v+(/\n$/.test(v)?'\u200b':'');return bodyIn.offsetHeight<=MAXLINES*LH+1}
+function applyBody(v){
+  bodyIn.textContent=v+(/\n$/.test(v)?'\u200b':'');
+  return bodyIn.offsetHeight<=MAXLINES*LH+1&&pbody.scrollWidth<=pbody.clientWidth+1;
+}
 function meter(){
   const n=Math.min(MAXLINES,Math.round(bodyIn.offsetHeight/LH));
-  $('#lcnt').textContent='الأسطر: '+n+' / '+MAXLINES;
+  $('#lcnt').textContent='الأسطر '+n+' / '+MAXLINES;
   const b=$('#mbar');b.style.width=(n/MAXLINES*100)+'%';b.classList.toggle('full',n>=MAXLINES);
 }
 ta.addEventListener('input',e=>{
@@ -246,13 +234,13 @@ ta.addEventListener('input',e=>{
 });
 function setAlign(a){S.align=a;bodyIn.style.textAlign=a;ta.style.textAlign=a;['R','C','L'].forEach(x=>$('#a'+x).classList.toggle('on',(x==='R'&&a==='right')||(x==='C'&&a==='center')||(x==='L'&&a==='left')));save()}
 $('#aR').onclick=()=>setAlign('right');$('#aC').onclick=()=>setAlign('center');$('#aL').onclick=()=>setAlign('left');
-function setSize(n,quiet){
+function setSize(n){
   const old=S.size;bodyIn.style.fontSize=n+'px';
-  if(!applyBody(S.body)){bodyIn.style.fontSize=old+'px';applyBody(S.body);if(!quiet)toast('ما يصير أكبر، النص يطلع من الإطار');return}
-  S.size=n;$('#scnt').textContent='الخط: '+n;meter();save();
+  if(!applyBody(S.body)){bodyIn.style.fontSize=old+'px';applyBody(S.body);toast('ما يصير أكبر، النص يطلع من الإطار');return}
+  S.size=n;$('#scnt').textContent='الخط '+n;meter();save();
 }
-$('#sUp').onclick=()=>{if(S.size<34)setSize(S.size+2)};
-$('#sDn').onclick=()=>{if(S.size>20)setSize(S.size-2)};
+$('#sUp').onclick=()=>{if(S.size<36)setSize(S.size+2)};
+$('#sDn').onclick=()=>{if(S.size>22)setSize(S.size-2)};
 
 ['السلام عليكم ورحمة الله وبركاته','تحية طيبة','يرجى التفضل بالاطلاع وبيان الرأي','مع فائق الشكر والتقدير'].forEach(t=>{
   const c=document.createElement('button');c.className='chip';c.textContent=t;
@@ -262,7 +250,7 @@ $('#sDn').onclick=()=>{if(S.size>20)setSize(S.size-2)};
 
 /* ---------- الضغط على المعاينة ينقل للحقل ---------- */
 document.querySelectorAll('[data-for]').forEach(el=>el.addEventListener('click',()=>{
-  setTab('write');const t=$('#'+el.dataset.for);t.focus();
+  setTab('write');$('#'+el.dataset.for).focus();
 }));
 
 /* ---------- مسح ---------- */
@@ -285,37 +273,49 @@ addEventListener('resize',fit);
 
 /* ---------- تحميل المحفوظ ---------- */
 function load(){
-  try{const d=JSON.parse(localStorage.getItem('mustaqbal2')||'null');if(d)S={...S,...d}}catch(e){}
-  try{S.custom=localStorage.getItem('mustaqbal2c')||''}catch(e){}
-  if(S.frame==='c'&&!S.custom)S.frame=1;
+  try{const d=JSON.parse(localStorage.getItem('mustaqbal3')||'null');if(d)S={...S,...d}}catch(e){}
+  if(![0,1,2].includes(S.frame))S.frame=1;
   FIELDS.forEach(f=>{f.i.value=S[f.k];f.apply(S[f.k])});
-  ta.value=S.body;applyBody(S.body);
-  bodyIn.style.fontSize=S.size+'px';$('#scnt').textContent='الخط: '+S.size;
+  ta.value=S.body;bodyIn.style.fontSize=S.size+'px';applyBody(S.body);
+  $('#scnt').textContent='الخط '+S.size;
   setAlign(S.align);applyFrame();meter();
 }
 
 /* ---------- التصدير ---------- */
 async function render(scale){
+  try{await document.fonts.load('600 30px "Noto Naskh Arabic"','ابجد')}catch(e){}
   if(document.fonts&&document.fonts.ready)await document.fonts.ready;
   const wrap=document.createElement('div');
   wrap.style.cssText='position:fixed;left:-10000px;top:0;width:900px;height:1273px;';
-  const c=stage.cloneNode(true);c.removeAttribute('id');c.style.cssText='position:absolute;top:0;left:0;width:900px;height:1273px;transform:none;box-shadow:none;background:#fff;overflow:hidden';
+  const c=stage.cloneNode(true);c.removeAttribute('id');
+  c.style.cssText='position:absolute;top:0;left:0;width:900px;height:1273px;transform:none;box-shadow:none;background:#fff;overflow:hidden';
+  const bi=c.querySelector('#bodyIn');
+  if(bi){bi.textContent=S.body;bi.style.overflowWrap='normal';bi.style.wordBreak='normal'}
   wrap.appendChild(c);document.body.appendChild(wrap);
   try{
-    return await html2canvas(c,{scale:scale,backgroundColor:'#ffffff',useCORS:true,width:900,height:1273,windowWidth:1200,scrollX:0,scrollY:0});
+    return await html2canvas(c,{scale:scale,backgroundColor:'#ffffff',width:900,height:1273,windowWidth:1200,scrollX:0,scrollY:0,logging:false});
   }finally{wrap.remove()}
 }
 const fname=()=>($('#fname').value.replace(/[\\/:*?"<>|]/g,'').trim()||'كتاب');
+function download(blob,name){
+  const u=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=u;a.download=name;a.style.display='none';
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{a.remove();URL.revokeObjectURL(u)},5000);
+}
 $('#bImg').onclick=async()=>{
-  try{toast('جاري التجهيز...');const c=await render(3);const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download=fname()+'.png';document.body.appendChild(a);a.click();a.remove();toast('تم حفظ الصورة')}
-  catch(e){toast('صار خطأ، جرب مرة ثانية')}
+  try{
+    toast('جاري التجهيز...');const c=await render(3);
+    c.toBlob(b=>{download(b,fname()+'.png');toast('تم تنزيل الصورة')},'image/png');
+  }catch(e){toast('صار خطأ، جرب مرة ثانية')}
 };
 $('#bPdf').onclick=async()=>{
-  try{toast('جاري التجهيز...');const c=await render(2);
+  try{
+    toast('جاري التجهيز...');const c=await render(2);
     const pdf=new jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
     pdf.addImage(c.toDataURL('image/jpeg',0.95),'JPEG',0,0,210,297);
-    pdf.save(fname()+'.pdf');toast('تم حفظ PDF')}
-  catch(e){toast('صار خطأ، جرب مرة ثانية')}
+    download(pdf.output('blob'),fname()+'.pdf');toast('تم تنزيل PDF');
+  }catch(e){toast('صار خطأ، جرب مرة ثانية')}
 };
 
 load();fit();
