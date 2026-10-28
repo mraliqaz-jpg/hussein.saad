@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>مدرسة المستقبل للبنين - كتب رسمية</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&family=Noto+Naskh+Arabic:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -14,7 +14,7 @@
   --gold:#e0a526;
   --bg:#eef2f6;
   --line:#d8e0e8;
-  --pf:'Noto Naskh Arabic', 'Geeza Pro', 'Arial', sans-serif;
+  --pf:'Amiri', 'Arial', sans-serif;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);font-family:'Cairo',sans-serif;color:#1d2b3a}
@@ -29,7 +29,7 @@ header small{display:block;font-weight:500;opacity:.75;font-size:12px}
 .card h3{margin:0 0 10px;font-size:15px;color:var(--navy);display:flex;align-items:center;gap:6px}
 .card h3 i{font-style:normal;background:var(--teal);color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px}
 label{display:block;font-size:13px;color:#5a6b7d;margin:8px 0 4px}
-.in{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:9px 11px;font-family:var(--pf);font-weight:600;font-size:20px;color:#000;background:#fafcfe;outline:none}
+.in{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:9px 11px;font-family:var(--pf);font-weight:700;font-size:20px;color:#000;background:#fafcfe;outline:none}
 .in:focus{border-color:var(--teal);background:#fff}
 .in.warn{border-color:#d9534f;animation:sh .3s}
 @keyframes sh{25%{transform:translateX(4px)}75%{transform:translateX(-4px)}}
@@ -57,7 +57,7 @@ textarea.in{resize:none;line-height:1.7;height:210px}
 #preview{position:sticky;top:12px;display:flex;justify-content:center}
 #holder{position:relative}
 #stage{position:absolute;top:0;left:0;width:900px;height:1273px;background:#fff;transform-origin:top left;box-shadow:0 3px 18px rgba(0,0,0,.28);overflow:hidden;color:#000;direction:rtl;text-align:right;}
-#stage,#stage *{font-family:var(--pf);font-weight:600;color:#000;letter-spacing:0}
+#stage,#stage *{font-family:var(--pf);font-weight:700;color:#000;letter-spacing:0}
 .pt{font-size:30px;line-height:44px}
 #frame{position:absolute;inset:0;pointer-events:none}
 #frame svg{width:100%;height:100%;display:block}
@@ -284,11 +284,11 @@ function load(){
   if(![0,1,2].includes(S.frame))S.frame=1;
   FIELDS.forEach(f=>{f.i.value=S[f.k];f.apply(S[f.k])});
   ta.value=S.body;bodyIn.style.fontSize=S.size+'px';applyBody(S.body);
-  $('#scnt').textContent='الخط '+S.size;
+  $('#scnt').textContent='La الخط '+S.size;
   setAlign(S.align);applyFrame();meter();
 }
 
-/* ---------- التصدير (معدلة لمنع تقطيع وحك الحروف في سفاري) ---------- */
+/* ---------- التصدير (مضبوط بالكامل ليتوافق مع سفاري وجيت هاب) ---------- */
 async function render(scale){
   try {
     if (document.fonts && document.fonts.ready) {
@@ -303,13 +303,13 @@ async function render(scale){
   c.removeAttribute('id');
   c.style.cssText = 'position:absolute;top:0;left:0;width:900px;height:1273px;transform:none;box-shadow:none;background:#fff;overflow:hidden;direction:rtl;';
   
-  // معالجة العناصر لمنع تشابك وتفكيك الحروف في محرك سفاري
+  // إجبار كل العناصر على استخدام خط Amiri المعتمد وثبات الاتجاه
   const allElements = c.querySelectorAll('*');
   allElements.forEach(el => {
     el.style.direction = 'rtl';
     el.style.textAlign = 'right';
     el.style.letterSpacing = '0px';
-    el.style.fontFamily = "'Geeza Pro', 'Noto Naskh Arabic', sans-serif";
+    el.style.fontFamily = "'Amiri', 'Arial', sans-serif";
   });
 
   const bi = c.querySelector('#bodyIn');
@@ -321,14 +321,14 @@ async function render(scale){
     bi.style.direction = 'rtl';
     bi.style.textAlign = S.align;
     bi.style.letterSpacing = '0px';
-    bi.style.fontFamily = "'Geeza Pro', 'Noto Naskh Arabic', sans-serif";
+    bi.style.fontFamily = "'Amiri', 'Arial', sans-serif";
   }
   
   wrap.appendChild(c);
   document.body.appendChild(wrap);
 
-  // إعطاء وقت أطول واستقرار كامل لمتصفح سفاري لترتيب الحروف العربية المتصلة
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  // وقت انتظار 1.2 ثانية كافٍ جداً لجيت هاب وسفاري لاستقرار خط Amiri ورسم الحروف متصلة بدقة
+  await new Promise(resolve => setTimeout(resolve, 1200));
 
   try{
     return await html2canvas(c, {
