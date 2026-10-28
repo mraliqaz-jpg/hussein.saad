@@ -4,23 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>مدرسة المستقبل للبنين - كتب رسمية</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&family=Amiri:wght@400;700&display=swap">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&family=Noto+Naskh+Arabic:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-:root{
-  --navy:#14304a;
-  --teal:#0f8b8d;
-  --gold:#e0a526;
-  --bg:#eef2f6;
-  --line:#d8e0e8;
-  --pf:'Amiri', 'Geeza Pro', sans-serif;
-}
+:root{--navy:#14304a;--teal:#0f8b8d;--gold:#e0a526;--bg:#eef2f6;--line:#d8e0e8;--pf:'Noto Naskh Arabic','Amiri','Traditional Arabic',serif}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);font-family:'Cairo',sans-serif;color:#1d2b3a}
 header{background:linear-gradient(120deg,var(--navy),#1d4a6e);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
@@ -29,17 +17,15 @@ header small{display:block;font-weight:500;opacity:.75;font-size:12px}
 #tabs{display:none;gap:6px}
 #tabs button{border:0;border-radius:20px;padding:7px 16px;font-family:inherit;font-size:14px;background:rgba(255,255,255,.15);color:#fff;cursor:pointer}
 #tabs button.on{background:var(--gold);color:#222;font-weight:700}
-
-/* تعديل تخطيط الصفحة لضمان عدم تغطية المعاينة على حقول الإدخال */
-#app{display:grid;grid-template-columns:420px minmax(0, 1fr);gap:20px;padding:16px;max-width:1400px;margin:0 auto;align-items:start}
-#panel{width:100%;z-index:2;position:relative;}
-
+#app{display:grid;grid-template-columns:420px 1fr;gap:16px;padding:16px;max-width:1400px;margin:0 auto;align-items:start}
 .card{background:#fff;border-radius:16px;padding:14px;margin-bottom:14px;box-shadow:0 1px 6px rgba(20,48,74,.08)}
 .card h3{margin:0 0 10px;font-size:15px;color:var(--navy);display:flex;align-items:center;gap:6px}
 .card h3 i{font-style:normal;background:var(--teal);color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px}
 label{display:block;font-size:13px;color:#5a6b7d;margin:8px 0 4px}
-.in{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:9px 11px;font-family:var(--pf);font-weight:700;font-size:20px;color:#000;background:#fafcfe;outline:none}
+.in{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:9px 11px;font-family:var(--pf);font-weight:600;font-size:20px;color:#000;background:#fafcfe;outline:none}
 .in:focus{border-color:var(--teal);background:#fff}
+.in.warn{border-color:#d9534f;animation:sh .3s}
+@keyframes sh{25%{transform:translateX(4px)}75%{transform:translateX(-4px)}}
 .rw{display:flex;gap:6px}
 .rw .in{flex:1}
 .btn{border:0;border-radius:10px;padding:9px 13px;font-family:inherit;font-size:14px;cursor:pointer;background:#e6edf4;color:var(--navy);font-weight:600;display:inline-flex;align-items:center;gap:5px;justify-content:center}
@@ -61,38 +47,27 @@ textarea.in{resize:none;line-height:1.7;height:210px}
 .fr .th{height:84px;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .fr .th svg{height:100%;width:auto;border:1px solid #ddd;background:#fff}
 .fr .th span{font-size:24px;color:#999}
-
-/* تحسين مكان المعاينة لتجنب خروجها عن الحدود */
-#preview{position:sticky;top:12px;display:flex;justify-content:center;overflow:hidden;}
-#holder{position:relative;margin:0 auto;}
-#stage{position:absolute;top:0;left:0;width:900px;height:1273px;background:#fff;transform-origin:top left;box-shadow:0 3px 18px rgba(0,0,0,.28);overflow:hidden;color:#000;direction:rtl;text-align:right;}
-#stage,#stage *{font-family:var(--pf);font-weight:700;color:#000;letter-spacing:0px}
+#preview{position:sticky;top:12px;display:flex;justify-content:center}
+#holder{position:relative}
+#stage{position:absolute;top:0;left:0;width:900px;height:1273px;background:#fff;transform-origin:top left;box-shadow:0 3px 18px rgba(0,0,0,.28);overflow:hidden;color:#000}
+#stage,#stage *{font-family:var(--pf);font-weight:600;color:#000;letter-spacing:0}
 .pt{font-size:30px;line-height:44px}
 #frame{position:absolute;inset:0;pointer-events:none}
 #frame svg{width:100%;height:100%;display:block}
 .abs{position:absolute;white-space:nowrap}
 .hd{height:44px}
 .hr{right:140px}
-.hl{left:58px;width:330px;display:flex;overflow:hidden;align-items:center;direction:rtl;}
+.hl{left:58px;width:330px;display:flex;overflow:hidden;align-items:center}
 .hl>span{flex:none}
-.row{left:80px;width:740px;display:flex;justify-content:center;align-items:center;overflow:hidden;height:44px;direction:rtl;}
+.row{left:80px;width:740px;display:flex;justify-content:center;align-items:center;overflow:hidden;height:44px}
 .row>span{flex:none}
 .row .sep{display:none;margin:0 10px}.row .sep.show{display:inline}
 .ft{left:120px;width:400px;text-align:center}
-#pbody{position:absolute;left:85px;top:404px;width:730px;height:624px;overflow:hidden;direction:rtl;}
-#bodyIn{white-space:pre-wrap;overflow-wrap:normal;word-break:normal;font-size:30px;line-height:44px;text-align:right;direction:rtl;unicode-bidi:plaintext;}
+#pbody{position:absolute;left:85px;top:404px;width:730px;height:624px;overflow:hidden}
+#bodyIn{white-space:pre-wrap;overflow-wrap:normal;word-break:normal;font-size:30px;line-height:42px;text-align:right;direction:rtl}
 [data-for]{cursor:pointer}
 #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:9px 16px;border-radius:20px;font-size:14px;opacity:0;transition:.3s;pointer-events:none;z-index:30}
 #toast.show{opacity:1}
-
-@media print {
-  body { background: #fff; }
-  header, #panel, #tabs, #toast { display: none !important; }
-  #app { display: block; padding: 0; margin: 0; }
-  #preview { position: static; }
-  #stage { transform: none !important; box-shadow: none !important; position: absolute; top: 0; left: 0; }
-}
-
 @media(max-width:900px){
   #app{grid-template-columns:1fr;padding:10px}
   #tabs{display:flex}
@@ -105,12 +80,13 @@ textarea.in{resize:none;line-height:1.7;height:210px}
 <body>
 
 <header>
-  <h1>مدرسة المستقبل للبنين<small>إعداد الكتب الرسمية وتصديرها</small></h1>
+  <h1>مدرسة المستقبل للبنين<small>إعداد الكتب الرسمية وتصديرها PDF أو صورة</small></h1>
   <div id="tabs"><button id="tW" class="on">✍ الكتابة</button><button id="tP">👁 المعاينة</button></div>
 </header>
 
 <div id="app" data-tab="write">
 <section id="panel">
+
   <div class="card">
     <h3><i>1</i>اختر الإطار</h3>
     <div id="frames"></div>
@@ -122,18 +98,18 @@ textarea.in{resize:none;line-height:1.7;height:210px}
     <input class="in" id="i_num" autocomplete="off" placeholder="مثال 125">
     <label>التاريخ</label>
     <div class="rw"><input class="in" id="i_date" autocomplete="off" placeholder="2026/10/28"><button class="btn" id="today">اليوم</button></div>
-    <label>إلى / ديوان محافظة البصرة</label>
+    <label>إلى / ديوان محافظة البصرة / (اكتب الجهة هنا)</label>
     <input class="in" id="i_to" autocomplete="off" placeholder="مثال شركة كي كارد">
-    <label>م / الموضوع</label>
+    <label>م / (الموضوع)</label>
     <input class="in" id="i_subj" autocomplete="off" placeholder="مثال طلب تزويد">
   </div>
 
   <div class="card">
     <h3><i>3</i>نص الكتاب</h3>
     <div class="tools">
-      <button class="btn on" id="aR">يمين</button>
-      <button class="btn" id="aC">وسط</button>
-      <button class="btn" id="aL">يسار</button>
+      <button class="btn on" id="aR"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18M9 12h12M5 18h16"/></svg>يمين</button>
+      <button class="btn" id="aC"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18M7 12h10M5 18h14"/></svg>وسط</button>
+      <button class="btn" id="aL"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18M3 12h12M3 18h16"/></svg>يسار</button>
       <button class="btn" id="sUp">A+</button>
       <button class="btn" id="sDn">A−</button>
     </div>
@@ -145,24 +121,33 @@ textarea.in{resize:none;line-height:1.7;height:210px}
 
   <div class="card">
     <h3><i>4</i>التصدير</h3>
+    <label>اسم الملف</label>
+    <input class="in" id="fname" value="كتاب" autocomplete="off">
     <div class="tools" style="margin-top:10px">
-      <button class="btn pdf" id="bPrint" style="background:#2e9e5b;color:#fff;width:100%;">🖨 حفظ PDF / مشاركة</button>
+      <button class="btn pdf" id="bPdf">⬇ تحميل PDF</button>
+      <button class="btn img" id="bImg">⬇ تحميل صورة</button>
       <button class="btn clr" id="bClr">🗑 مسح الكل</button>
     </div>
   </div>
+
 </section>
 
 <section id="preview">
   <div id="holder">
     <div id="stage">
       <div id="frame"></div>
+
       <div class="abs pt hd hr" style="top:131px">إدارة متوسطة</div>
       <div class="abs pt hd hr" style="top:175px">المستقبل للبنين</div>
+
       <div class="abs pt hd hl" style="top:131px" data-for="i_num"><span>العدد /</span><span>&nbsp;</span><span class="v" id="p_num"></span></div>
       <div class="abs pt hd hl" style="top:175px" data-for="i_date"><span>التاريخ /</span><span>&nbsp;</span><span class="v" id="p_date"></span></div>
+
       <div class="abs pt row" style="top:276px" data-for="i_to"><span>إلى / ديوان محافظة البصرة</span><span class="sep">/</span><span class="v" id="p_to"></span></div>
       <div class="abs pt row" style="top:326px" data-for="i_subj"><span>م /</span><span>&nbsp;</span><span class="v" id="p_subj"></span></div>
+
       <div id="pbody" data-for="i_body"><div id="bodyIn"></div></div>
+
       <div class="abs pt ft" style="top:1053px">مدير المتوسطة</div>
       <div class="abs pt ft" style="top:1098px">استاذ عبد الوهاب صبري حسين</div>
     </div>
@@ -174,9 +159,11 @@ textarea.in{resize:none;line-height:1.7;height:210px}
 <script>
 const $=s=>document.querySelector(s);
 const stage=$('#stage'),holder=$('#holder'),app=$('#app');
-const MAXLINES=16,LH=44;
+const MAXLINES=16,LH=39;
 let S={num:'',date:'',to:'',subj:'',body:'',align:'right',size:30,frame:1};
+let tt;
 
+/* ---------- الإطارات ---------- */
 const orn=t=>`<g transform="${t}" stroke-width="1.6"><path d="M60 128 L60 110 Q60 60 110 60 L128 60"/><path d="M72 122 L72 108 Q72 72 108 72 L122 72" stroke-width="1"/><path d="M100 96 a8 8 0 1 0 -8 8 a4 4 0 1 1 4 -4"/></g>`;
 const dot=(x,y)=>`<circle cx="${x}" cy="${y}" r="4.5"/>`;
 const dia=(x,y)=>`<path d="M${x} ${y-10} l10 10 l-10 10 l-10 -10z"/>`;
@@ -186,10 +173,10 @@ const FRAMES={
  2:SVG(`<rect x="30" y="30" width="840" height="1213" stroke-width="2"/><rect x="43" y="43" width="814" height="1187" stroke-width="7"/><rect x="60" y="60" width="780" height="1153" stroke-width="1.2"/><g fill="#000" stroke="none">${dia(450,36)}${dia(450,1237)}<path d="M36 626 l10 10 l-10 10 l-10 -10z"/><path d="M864 626 l10 10 l-10 10 l-10 -10z"/></g><g fill="#fff" stroke-width="3"><rect x="20" y="20" width="28" height="28"/><rect x="852" y="20" width="28" height="28"/><rect x="20" y="1225" width="28" height="28"/><rect x="852" y="1225" width="28" height="28"/></g><g fill="#000" stroke="none"><rect x="29" y="29" width="10" height="10"/><rect x="861" y="29" width="10" height="10"/><rect x="29" y="1234" width="10" height="10"/><rect x="861" y="1234" width="10" height="10"/></g>`),
  0:''
 };
-
+const FNAMES=[[1,'إطار 1'],[2,'إطار 2'],[0,'بدون إطار']];
 function drawFrames(){
   const box=$('#frames');box.innerHTML='';
-  [[1,'إطار 1'],[2,'إطار 2'],[0,'بدون إطار']].forEach(([k,n])=>{
+  FNAMES.forEach(([k,n])=>{
     const b=document.createElement('button');b.className='fr'+(S.frame===k?' on':'');
     b.innerHTML=`<div class="th">${k===0?'<span>∅</span>':FRAMES[k]}</div>${n}`;
     b.onclick=()=>{S.frame=k;applyFrame();save()};
@@ -198,60 +185,175 @@ function drawFrames(){
 }
 function applyFrame(){$('#frame').innerHTML=FRAMES[S.frame]||'';drawFrames()}
 
+/* ---------- مساعدات ---------- */
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1800)}
+function warn(el){el.classList.remove('warn');void el.offsetWidth;el.classList.add('warn');toast('ما بقت مساحة في هذا السطر')}
+function fitText(apply,v,paste){
+  if(apply(v))return v;
+  if(!paste)return null;
+  let lo=0,hi=v.length;
+  while(lo<hi){const m=Math.ceil((lo+hi)/2);if(apply(v.slice(0,m)))lo=m;else hi=m-1}
+  apply(v.slice(0,lo));return v.slice(0,lo);
+}
 function save(){try{localStorage.setItem('mustaqbal3',JSON.stringify(S))}catch(e){}}
 
+/* ---------- الحقول القصيرة ---------- */
 const FIELDS=['num','date','to','subj'].map(k=>{
   const f={k,i:$('#i_'+k),p:$('#p_'+k)};
   f.box=f.p.parentElement;f.sep=f.box.querySelector('.sep');
   f.apply=v=>{f.p.textContent=v;if(f.sep)f.sep.classList.toggle('show',v.trim()!=='');return f.box.scrollWidth<=f.box.clientWidth+1};
   f.i.addEventListener('input',e=>{
     const v=f.i.value.replace(/[\r\n]+/g,' ');
-    S[k]=v; f.apply(v); save();
+    const r=fitText(f.apply,v,e.inputType==='insertFromPaste');
+    if(r===null){f.apply(S[k]);f.i.value=S[k];warn(f.i)}
+    else{S[k]=r;if(f.i.value!==r)f.i.value=r;save()}
   });
   return f;
 });
-
 $('#today').onclick=()=>{
   const d=new Date(),v=d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();
-  FIELDS[1].apply(v); S.date=v; FIELDS[1].i.value=v; save();
+  const f=FIELDS[1];if(f.apply(v)){S.date=v;f.i.value=v;save()}
 };
 
-const ta=$('#i_body'),bodyIn=$('#bodyIn');
+/* ---------- نص الكتاب ---------- */
+const ta=$('#i_body'),bodyIn=$('#bodyIn'),pbody=$('#pbody');
+function applyBody(v){
+  bodyIn.textContent=v+(/\n$/.test(v)?'\u200b':'');
+  return bodyIn.offsetHeight<=MAXLINES*LH+1&&pbody.scrollWidth<=pbody.clientWidth+1;
+}
+function meter(){
+  const n=Math.min(MAXLINES,Math.round(bodyIn.offsetHeight/LH));
+  $('#lcnt').textContent='الأسطر '+n+' / '+MAXLINES;
+  const b=$('#mbar');b.style.width=(n/MAXLINES*100)+'%';b.classList.toggle('full',n>=MAXLINES);
+}
 ta.addEventListener('input',e=>{
-  bodyIn.textContent=ta.value;
-  S.body=ta.value;
-  save();
+  const r=fitText(applyBody,ta.value,e.inputType==='insertFromPaste');
+  if(r===null){applyBody(S.body);ta.value=S.body;warn(ta);toast('وصلت لنهاية الصفحة')}
+  else{if(ta.value!==r){ta.value=r;toast('تم قص الزائد حتى يبقى داخل الإطار')}S.body=r;save()}
+  meter();
+});
+function setAlign(a){S.align=a;bodyIn.style.textAlign=a;ta.style.textAlign=a;['R','C','L'].forEach(x=>$('#a'+x).classList.toggle('on',(x==='R'&&a==='right')||(x==='C'&&a==='center')||(x==='L'&&a==='left')));save()}
+$('#aR').onclick=()=>setAlign('right');$('#aC').onclick=()=>setAlign('center');$('#aL').onclick=()=>setAlign('left');
+function setSize(n){
+  const old=S.size;bodyIn.style.fontSize=n+'px';
+  if(!applyBody(S.body)){bodyIn.style.fontSize=old+'px';applyBody(S.body);toast('ما يصير أكبر، النص يطلع من الإطار');return}
+  S.size=n;$('#scnt').textContent='الخط '+n;meter();save();
+}
+$('#sUp').onclick=()=>{if(S.size<36)setSize(S.size+2)};
+$('#sDn').onclick=()=>{if(S.size>22)setSize(S.size-2)};
+
+['السلام عليكم ورحمة الله وبركاته','تحية طيبة','يرجى التفضل بالاطلاع وبيان الرأي','مع فائق الشكر والتقدير'].forEach(t=>{
+  const c=document.createElement('button');c.className='chip';c.textContent=t;
+  c.onclick=()=>{ta.focus();const s=ta.selectionStart;ta.setRangeText(t+'\n',s,ta.selectionEnd,'end');ta.dispatchEvent(new Event('input'))};
+  $('#chips').appendChild(c);
 });
 
-$('#bPrint').onclick=()=>{ window.print(); };
+/* ---------- الضغط على المعاينة ينقل للحقل ---------- */
+document.querySelectorAll('[data-for]').forEach(el=>el.addEventListener('click',()=>{
+  setTab('write');$('#'+el.dataset.for).focus();
+}));
 
+/* ---------- مسح ---------- */
 $('#bClr').onclick=()=>{
   if(!confirm('تريد تمسح كل الكتابة؟'))return;
   FIELDS.forEach(f=>{S[f.k]='';f.i.value='';f.apply('')});
-  S.body='';ta.value='';bodyIn.textContent='';save();
+  S.body='';ta.value='';applyBody('');meter();save();
 };
 
+/* ---------- التبويبات والقياس ---------- */
+function setTab(t){if(innerWidth>900)return;app.dataset.tab=t;$('#tW').classList.toggle('on',t==='write');$('#tP').classList.toggle('on',t==='view');if(t==='view')setTimeout(fit,0)}
+$('#tW').onclick=()=>setTab('write');$('#tP').onclick=()=>setTab('view');
 function fit(){
-  const pv=$('#preview');
-  let w=pv.clientWidth;
-  if(w<=0)return;
+  const pv=$('#preview');let w=pv.clientWidth;if(w<=0)return;
   let s=Math.min(w,900)/900;
-  if(innerWidth>900) s=Math.min(s,(innerHeight-30)/1273);
-  holder.style.width=900*s+'px';
-  holder.style.height=1273*s+'px';
-  stage.style.transform='scale('+s+')';
+  if(innerWidth>900)s=Math.min(s,(innerHeight-24)/1273);
+  holder.style.width=900*s+'px';holder.style.height=1273*s+'px';stage.style.transform='scale('+s+')';
 }
 addEventListener('resize',fit);
 
+/* ---------- تحميل المحفوظ ---------- */
 function load(){
   try{const d=JSON.parse(localStorage.getItem('mustaqbal3')||'null');if(d)S={...S,...d}}catch(e){}
+  if(![0,1,2].includes(S.frame))S.frame=1;
   FIELDS.forEach(f=>{f.i.value=S[f.k];f.apply(S[f.k])});
-  ta.value=S.body;bodyIn.textContent=S.body;
-  applyFrame();
-  fit();
+  ta.value=S.body;bodyIn.style.fontSize=S.size+'px';applyBody(S.body);
+  $('#scnt').textContent='الخط '+S.size;
+  setAlign(S.align);applyFrame();meter();
 }
 
-load();
+/* ---------- التصدير (المصححة لمنع التداخل) ---------- */
+async function render(scale){
+  try {
+    if (document.fonts && document.fonts.ready) {
+      await document.fonts.ready;
+    }
+  } catch(e){}
+
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'position:fixed;left:-10000px;top:0;width:900px;height:1273px;z-index:999999;';
+  
+  const c = stage.cloneNode(true);
+  c.removeAttribute('id');
+  c.style.cssText = 'position:absolute;top:0;left:0;width:900px;height:1273px;transform:none;box-shadow:none;background:#fff;overflow:hidden;';
+  
+  const bi = c.querySelector('#bodyIn');
+  if(bi){
+    bi.textContent = S.body + (/\n$/.test(S.body) ? '\u200b' : '');
+    bi.style.overflowWrap = 'normal';
+    bi.style.wordBreak = 'normal';
+    bi.style.lineHeight = '42px';
+  }
+  
+  wrap.appendChild(c);
+  document.body.appendChild(wrap);
+
+  // انتظار استقرار رسم الخطوط والعناصر بالكامل
+  await new Promise(resolve => setTimeout(resolve, 300));
+
+  try{
+    return await html2canvas(c, {
+      scale: scale,
+      backgroundColor: '#ffffff',
+      width: 900,
+      height: 1273,
+      windowWidth: 1200,
+      useCORS: true,
+      allowTaint: true,
+      scrollX: 0,
+      scrollY: 0,
+      logging: false
+    });
+  } finally {
+    wrap.remove();
+  }
+}
+
+const fname=()=>($('#fname').value.replace(/[\\/:*?"<>|]/g,'').trim()||'كتاب');
+function download(blob,name){
+  const u=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=u;a.download=name;a.style.display='none';
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{a.remove();URL.revokeObjectURL(u)},5000);
+}
+
+$('#bImg').onclick=async()=>{
+  try{
+    toast('جاري التجهيز...');const c=await render(3);
+    c.toBlob(b=>{download(b,fname()+'.png');toast('تم تنزيل الصورة')},'image/png');
+  }catch(e){toast('صار خطأ، جرب مرة ثانية')}
+};
+
+$('#bPdf').onclick=async()=>{
+  try{
+    toast('جاري التجهيز...');const c=await render(2);
+    const pdf=new jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    pdf.addImage(c.toDataURL('image/jpeg',0.95),'JPEG',0,0,210,297);
+    download(pdf.output('blob'),fname()+'.pdf');toast('تم تنزيل PDF');
+  }catch(e){toast('صار خطأ، جرب مرة ثانية')}
+};
+
+load();fit();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{FIELDS.forEach(f=>f.apply(S[f.k]));applyBody(S.body);meter();fit()});
 </script>
 </body>
 </html>
