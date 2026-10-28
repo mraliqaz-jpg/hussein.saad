@@ -4,11 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>مدرسة المستقبل للبنين - كتب رسمية</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&family=Noto+Naskh+Arabic:wght@500;600;700&display=swap" rel="stylesheet">
+<!-- روابط الخطوط الأساسية والاحتياطية -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-:root{--navy:#14304a;--teal:#0f8b8d;--gold:#e0a526;--bg:#eef2f6;--line:#d8e0e8;--pf:'Noto Naskh Arabic','Amiri','Traditional Arabic',serif}
+:root{--navy:#14304a;--teal:#0f8b8d;--gold:#e0a526;--bg:#eef2f6;--line:#d8e0e8;--pf:'Noto Naskh Arabic','Amiri','Traditional Arabic',sans-serif}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);font-family:'Cairo',sans-serif;color:#1d2b3a}
 header{background:linear-gradient(120deg,var(--navy),#1d4a6e);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
@@ -163,6 +164,33 @@ const MAXLINES=16,LH=39;
 let S={num:'',date:'',to:'',subj:'',body:'',align:'right',size:30,frame:1};
 let tt;
 
+/* ---------- نظام فحص وتثبيت الخطوط التلقائي لأجهزة أبل (iOS) ---------- */
+async function checkAndLoadFonts() {
+  if (document.fonts) {
+    const fontsToCheck = ['Noto Naskh Arabic', 'Amiri'];
+    let supported = false;
+    
+    for (let font of fontsToCheck) {
+      if (document.fonts.check(`16px "${font}"`)) {
+        supported = true;
+        break;
+      }
+    }
+
+    if (!supported) {
+      // إذا لم يكن الخط مدعوماً بشكل كامل في جهاز أبل، نقوم بحقنه برمجياً من الويب
+      const link = document.createElement('link');
+      link.href = 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap';
+      link.rel = 'stylesheet';
+      document.head.appendChild(link);
+    }
+    
+    try {
+      await document.fonts.ready;
+    } catch(e) {}
+  }
+}
+
 /* ---------- الإطارات ---------- */
 const orn=t=>`<g transform="${t}" stroke-width="1.6"><path d="M60 128 L60 110 Q60 60 110 60 L128 60"/><path d="M72 122 L72 108 Q72 72 108 72 L122 72" stroke-width="1"/><path d="M100 96 a8 8 0 1 0 -8 8 a4 4 0 1 1 4 -4"/></g>`;
 const dot=(x,y)=>`<circle cx="${x}" cy="${y}" r="4.5"/>`;
@@ -281,34 +309,38 @@ function load(){
   setAlign(S.align);applyFrame();meter();
 }
 
-/* ---------- التصدير (المصححة لمنع التداخل) ---------- */
+/* ---------- التصدير (المصححة لمنع التداخل في أبل) ---------- */
 async function render(scale){
-  try {
-    if (document.fonts && document.fonts.ready) {
-      await document.fonts.ready;
-    }
-  } catch(e){}
+  await checkAndLoadFonts();
 
   const wrap = document.createElement('div');
-  wrap.style.cssText = 'position:fixed;left:-10000px;top:0;width:900px;height:1273px;z-index:999999;';
+  wrap.style.cssText = 'position:fixed;left:-10000px;top:0;width:900px;height:1273px;z-index:999999;direction:rtl;';
   
   const c = stage.cloneNode(true);
   c.removeAttribute('id');
-  c.style.cssText = 'position:absolute;top:0;left:0;width:900px;height:1273px;transform:none;box-shadow:none;background:#fff;overflow:hidden;';
+  c.style.cssText = 'position:absolute;top:0;left:0;width:900px;height:1273px;transform:none;box-shadow:none;background:#fff;overflow:hidden;direction:rtl;';
   
+  // ضبط خصائص الخطوط بدقة لتناسب متصفح سفاري وأجهزة أبل
+  c.querySelectorAll('*').forEach(el => {
+    el.style.fontFamily = "'Noto Naskh Arabic', 'Amiri', sans-serif";
+    el.style.textRendering = 'geometricPrecision';
+    el.style.webkitFontSmoothing = 'antialiased';
+  });
+
   const bi = c.querySelector('#bodyIn');
   if(bi){
     bi.textContent = S.body + (/\n$/.test(S.body) ? '\u200b' : '');
     bi.style.overflowWrap = 'normal';
     bi.style.wordBreak = 'normal';
     bi.style.lineHeight = '42px';
+    bi.style.direction = 'rtl';
+    bi.style.textAlign = S.align;
   }
   
   wrap.appendChild(c);
   document.body.appendChild(wrap);
 
-  // انتظار استقرار رسم الخطوط والعناصر بالكامل
-  await new Promise(resolve => setTimeout(resolve, 300));
+  await new Promise(resolve => setTimeout(resolve, 500));
 
   try{
     return await html2canvas(c, {
@@ -353,7 +385,12 @@ $('#bPdf').onclick=async()=>{
 };
 
 load();fit();
-if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{FIELDS.forEach(f=>f.apply(S[f.k]));applyBody(S.body);meter();fit()});
+checkAndLoadFonts().then(() => {
+  FIELDS.forEach(f=>f.apply(S[f.k]));
+  applyBody(S.body);
+  meter();
+  fit();
+});
 </script>
 </body>
 </html>
