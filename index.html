@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>مدرسة المستقبل للبنين - كتب رسمية</title>
 
-<!-- 1. التحميل المسبق للخط (Preload) لضمان جلبه قبل فتح الموقع -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&family=Amiri:wght@400;700&display=swap">
@@ -30,7 +29,11 @@ header small{display:block;font-weight:500;opacity:.75;font-size:12px}
 #tabs{display:none;gap:6px}
 #tabs button{border:0;border-radius:20px;padding:7px 16px;font-family:inherit;font-size:14px;background:rgba(255,255,255,.15);color:#fff;cursor:pointer}
 #tabs button.on{background:var(--gold);color:#222;font-weight:700}
-#app{display:grid;grid-template-columns:420px 1fr;gap:16px;padding:16px;max-width:1400px;margin:0 auto;align-items:start}
+
+/* تعديل تخطيط الصفحة لضمان عدم تغطية المعاينة على حقول الإدخال */
+#app{display:grid;grid-template-columns:420px minmax(0, 1fr);gap:20px;padding:16px;max-width:1400px;margin:0 auto;align-items:start}
+#panel{width:100%;z-index:2;position:relative;}
+
 .card{background:#fff;border-radius:16px;padding:14px;margin-bottom:14px;box-shadow:0 1px 6px rgba(20,48,74,.08)}
 .card h3{margin:0 0 10px;font-size:15px;color:var(--navy);display:flex;align-items:center;gap:6px}
 .card h3 i{font-style:normal;background:var(--teal);color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px}
@@ -58,8 +61,10 @@ textarea.in{resize:none;line-height:1.7;height:210px}
 .fr .th{height:84px;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .fr .th svg{height:100%;width:auto;border:1px solid #ddd;background:#fff}
 .fr .th span{font-size:24px;color:#999}
-#preview{position:sticky;top:12px;display:flex;justify-content:center}
-#holder{position:relative}
+
+/* تحسين مكان المعاينة لتجنب خروجها عن الحدود */
+#preview{position:sticky;top:12px;display:flex;justify-content:center;overflow:hidden;}
+#holder{position:relative;margin:0 auto;}
 #stage{position:absolute;top:0;left:0;width:900px;height:1273px;background:#fff;transform-origin:top left;box-shadow:0 3px 18px rgba(0,0,0,.28);overflow:hidden;color:#000;direction:rtl;text-align:right;}
 #stage,#stage *{font-family:var(--pf);font-weight:700;color:#000;letter-spacing:0px}
 .pt{font-size:30px;line-height:44px}
@@ -141,7 +146,7 @@ textarea.in{resize:none;line-height:1.7;height:210px}
   <div class="card">
     <h3><i>4</i>التصدير</h3>
     <div class="tools" style="margin-top:10px">
-      <button class="btn pdf" id="bPrint" style="background:#2e9e5b;color:#fff;width:100%;">🖨 حفظ PDF / مشاركة (مضمون 100% للأيباد)</button>
+      <button class="btn pdf" id="bPrint" style="background:#2e9e5b;color:#fff;width:100%;">🖨 حفظ PDF / مشاركة</button>
       <button class="btn clr" id="bClr">🗑 مسح الكل</button>
     </div>
   </div>
@@ -171,7 +176,6 @@ const $=s=>document.querySelector(s);
 const stage=$('#stage'),holder=$('#holder'),app=$('#app');
 const MAXLINES=16,LH=44;
 let S={num:'',date:'',to:'',subj:'',body:'',align:'right',size:30,frame:1};
-let tt;
 
 const orn=t=>`<g transform="${t}" stroke-width="1.6"><path d="M60 128 L60 110 Q60 60 110 60 L128 60"/><path d="M72 122 L72 108 Q72 72 108 72 L122 72" stroke-width="1"/><path d="M100 96 a8 8 0 1 0 -8 8 a4 4 0 1 1 4 -4"/></g>`;
 const dot=(x,y)=>`<circle cx="${x}" cy="${y}" r="4.5"/>`;
@@ -194,7 +198,6 @@ function drawFrames(){
 }
 function applyFrame(){$('#frame').innerHTML=FRAMES[S.frame]||'';drawFrames()}
 
-function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
 function save(){try{localStorage.setItem('mustaqbal3',JSON.stringify(S))}catch(e){}}
 
 const FIELDS=['num','date','to','subj'].map(k=>{
@@ -213,17 +216,14 @@ $('#today').onclick=()=>{
   FIELDS[1].apply(v); S.date=v; FIELDS[1].i.value=v; save();
 };
 
-const ta=$('#i_body'),bodyIn=$('#bodyIn'),pbody=$('#pbody');
+const ta=$('#i_body'),bodyIn=$('#bodyIn');
 ta.addEventListener('input',e=>{
   bodyIn.textContent=ta.value;
   S.body=ta.value;
   save();
 });
 
-// زر الطباعة المدعوم نظامياً في أبل وسفاري لضمان خروج الكلمات متصلة 100%
-$('#bPrint').onclick=()=>{
-  window.print();
-};
+$('#bPrint').onclick=()=>{ window.print(); };
 
 $('#bClr').onclick=()=>{
   if(!confirm('تريد تمسح كل الكتابة؟'))return;
@@ -231,21 +231,27 @@ $('#bClr').onclick=()=>{
   S.body='';ta.value='';bodyIn.textContent='';save();
 };
 
+function fit(){
+  const pv=$('#preview');
+  let w=pv.clientWidth;
+  if(w<=0)return;
+  let s=Math.min(w,900)/900;
+  if(innerWidth>900) s=Math.min(s,(innerHeight-30)/1273);
+  holder.style.width=900*s+'px';
+  holder.style.height=1273*s+'px';
+  stage.style.transform='scale('+s+')';
+}
+addEventListener('resize',fit);
+
 function load(){
   try{const d=JSON.parse(localStorage.getItem('mustaqbal3')||'null');if(d)S={...S,...d}}catch(e){}
   FIELDS.forEach(f=>{f.i.value=S[f.k];f.apply(S[f.k])});
   ta.value=S.body;bodyIn.textContent=S.body;
   applyFrame();
+  fit();
 }
 
-// التأكد من تحميل الخط رسمياً قبل تفعيل الواجهة على الأيباد
-if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(() => {
-    load();
-  });
-} else {
-  load();
-}
+load();
 </script>
 </body>
 </html>
