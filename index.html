@@ -8,7 +8,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-:root{--navy:#14304a;--teal:#0f8b8d;--gold:#e0a526;--bg:#eef2f6;--line:#d8e0e8;--pf:'Noto Naskh Arabic','Amiri','Traditional Arabic',serif}
+:root{
+  --navy:#14304a;
+  --teal:#0f8b8d;
+  --gold:#e0a526;
+  --bg:#eef2f6;
+  --line:#d8e0e8;
+  --pf:'Noto Naskh Arabic', 'Geeza Pro', 'Arial', sans-serif;
+}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);font-family:'Cairo',sans-serif;color:#1d2b3a}
 header{background:linear-gradient(120deg,var(--navy),#1d4a6e);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
@@ -281,7 +288,7 @@ function load(){
   setAlign(S.align);applyFrame();meter();
 }
 
-/* ---------- التصدير (المصححة لمنع التداخل) ---------- */
+/* ---------- التصدير (المعدلة خصيصاً لأجهزة أبل والأيباد) ---------- */
 async function render(scale){
   try {
     if (document.fonts && document.fonts.ready) {
@@ -307,8 +314,8 @@ async function render(scale){
   wrap.appendChild(c);
   document.body.appendChild(wrap);
 
-  // انتظار استقرار رسم الخطوط والعناصر بالكامل
-  await new Promise(resolve => setTimeout(resolve, 300));
+  // منح متصفح سفاري والأيباد وقتاً كافياً (600ms) لاستقرار تركيب الخط العربي
+  await new Promise(resolve => setTimeout(resolve, 600));
 
   try{
     return await html2canvas(c, {
