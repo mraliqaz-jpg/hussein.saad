@@ -64,7 +64,7 @@ textarea.in{resize:none;line-height:1.7;height:210px}
 .row .sep{display:none;margin:0 10px}.row .sep.show{display:inline}
 .ft{left:120px;width:400px;text-align:center}
 #pbody{position:absolute;left:85px;top:404px;width:730px;height:624px;overflow:hidden}
-#bodyIn{white-space:pre-wrap;overflow-wrap:normal;word-break:normal;font-size:30px;line-height:39px;text-align:right;direction:rtl}
+#bodyIn{white-space:pre-wrap;overflow-wrap:normal;word-break:normal;font-size:30px;line-height:42px;text-align:right;direction:rtl}
 [data-for]{cursor:pointer}
 #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:9px 16px;border-radius:20px;font-size:14px;opacity:0;transition:.3s;pointer-events:none;z-index:30}
 #toast.show{opacity:1}
@@ -281,21 +281,53 @@ function load(){
   setAlign(S.align);applyFrame();meter();
 }
 
-/* ---------- التصدير ---------- */
+/* ---------- التصدير (المصححة لمنع التداخل) ---------- */
 async function render(scale){
-  try{await document.fonts.load('600 30px "Noto Naskh Arabic"','ابجد')}catch(e){}
-  if(document.fonts&&document.fonts.ready)await document.fonts.ready;
-  const wrap=document.createElement('div');
-  wrap.style.cssText='position:fixed;left:-10000px;top:0;width:900px;height:1273px;';
-  const c=stage.cloneNode(true);c.removeAttribute('id');
-  c.style.cssText='position:absolute;top:0;left:0;width:900px;height:1273px;transform:none;box-shadow:none;background:#fff;overflow:hidden';
-  const bi=c.querySelector('#bodyIn');
-  if(bi){bi.textContent=S.body;bi.style.overflowWrap='normal';bi.style.wordBreak='normal'}
-  wrap.appendChild(c);document.body.appendChild(wrap);
+  try {
+    if (document.fonts && document.fonts.ready) {
+      await document.fonts.ready;
+    }
+  } catch(e){}
+
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'position:fixed;left:-10000px;top:0;width:900px;height:1273px;z-index:999999;';
+  
+  const c = stage.cloneNode(true);
+  c.removeAttribute('id');
+  c.style.cssText = 'position:absolute;top:0;left:0;width:900px;height:1273px;transform:none;box-shadow:none;background:#fff;overflow:hidden;';
+  
+  const bi = c.querySelector('#bodyIn');
+  if(bi){
+    bi.textContent = S.body + (/\n$/.test(S.body) ? '\u200b' : '');
+    bi.style.overflowWrap = 'normal';
+    bi.style.wordBreak = 'normal';
+    bi.style.lineHeight = '42px';
+  }
+  
+  wrap.appendChild(c);
+  document.body.appendChild(wrap);
+
+  // انتظار استقرار رسم الخطوط والعناصر بالكامل
+  await new Promise(resolve => setTimeout(resolve, 300));
+
   try{
-    return await html2canvas(c,{scale:scale,backgroundColor:'#ffffff',width:900,height:1273,windowWidth:1200,scrollX:0,scrollY:0,logging:false});
-  }finally{wrap.remove()}
+    return await html2canvas(c, {
+      scale: scale,
+      backgroundColor: '#ffffff',
+      width: 900,
+      height: 1273,
+      windowWidth: 1200,
+      useCORS: true,
+      allowTaint: true,
+      scrollX: 0,
+      scrollY: 0,
+      logging: false
+    });
+  } finally {
+    wrap.remove();
+  }
 }
+
 const fname=()=>($('#fname').value.replace(/[\\/:*?"<>|]/g,'').trim()||'كتاب');
 function download(blob,name){
   const u=URL.createObjectURL(blob);
@@ -303,12 +335,14 @@ function download(blob,name){
   document.body.appendChild(a);a.click();
   setTimeout(()=>{a.remove();URL.revokeObjectURL(u)},5000);
 }
+
 $('#bImg').onclick=async()=>{
   try{
     toast('جاري التجهيز...');const c=await render(3);
     c.toBlob(b=>{download(b,fname()+'.png');toast('تم تنزيل الصورة')},'image/png');
   }catch(e){toast('صار خطأ، جرب مرة ثانية')}
 };
+
 $('#bPdf').onclick=async()=>{
   try{
     toast('جاري التجهيز...');const c=await render(2);
