@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>مدرسة المستقبل للبنين - كتب رسمية</title>
-<!-- استدعاء ملف الـ CSS الخارجي للخطوط والثبات -->
+<!-- استدعاء ملف الـ CSS الخارجي لضمان ثبات الخطوط في استضافة جيت هاب -->
 <link rel="stylesheet" href="style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -95,6 +95,7 @@ const MAXLINES=16,LH=44;
 let S={num:'',date:'',to:'',subj:'',body:'',align:'right',size:30,frame:1};
 let tt;
 
+/* ---------- الإطارات ---------- */
 const orn=t=>`<g transform="${t}" stroke-width="1.6"><path d="M60 128 L60 110 Q60 60 110 60 L128 60"/><path d="M72 122 L72 108 Q72 72 108 72 L122 72" stroke-width="1"/><path d="M100 96 a8 8 0 1 0 -8 8 a4 4 0 1 1 4 -4"/></g>`;
 const dot=(x,y)=>`<circle cx="${x}" cy="${y}" r="4.5"/>`;
 const dia=(x,y)=>`<path d="M${x} ${y-10} l10 10 l-10 10 l-10 -10z"/>`;
@@ -116,6 +117,7 @@ function drawFrames(){
 }
 function applyFrame(){$('#frame').innerHTML=FRAMES[S.frame]||'';drawFrames()}
 
+/* ---------- مساعدات ---------- */
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1800)}
 function warn(el){el.classList.remove('warn');void el.offsetWidth;el.classList.add('warn');toast('ما بقت مساحة في هذا السطر')}
 function fitText(apply,v,paste){
@@ -127,6 +129,7 @@ function fitText(apply,v,paste){
 }
 function save(){try{localStorage.setItem('mustaqbal3',JSON.stringify(S))}catch(e){}}
 
+/* ---------- الحقول القصيرة ---------- */
 const FIELDS=['num','date','to','subj'].map(k=>{
   const f={k,i:$('#i_'+k),p:$('#p_'+k)};
   f.box=f.p.parentElement;f.sep=f.box.querySelector('.sep');
@@ -144,6 +147,7 @@ $('#today').onclick=()=>{
   const f=FIELDS[1];if(f.apply(v)){S.date=v;f.i.value=v;save()}
 };
 
+/* ---------- نص الكتاب ---------- */
 const ta=$('#i_body'),bodyIn=$('#bodyIn'),pbody=$('#pbody');
 function applyBody(v){
   bodyIn.textContent=v+(/\n$/.test(v)?'\u200b':'');
@@ -176,16 +180,19 @@ $('#sDn').onclick=()=>{if(S.size>22)setSize(S.size-2)};
   $('#chips').appendChild(c);
 });
 
+/* ---------- الضغط على المعاينة ينقل للحقل ---------- */
 document.querySelectorAll('[data-for]').forEach(el=>el.addEventListener('click',()=>{
   setTab('write');$('#'+el.dataset.for).focus();
 }));
 
+/* ---------- مسح ---------- */
 $('#bClr').onclick=()=>{
   if(!confirm('تريد تمسح كل الكتابة؟'))return;
   FIELDS.forEach(f=>{S[f.k]='';f.i.value='';f.apply('')});
   S.body='';ta.value='';applyBody('');meter();save();
 };
 
+/* ---------- التبويبات والقياس ---------- */
 function setTab(t){if(innerWidth>900)return;app.dataset.tab=t;$('#tW').classList.toggle('on',t==='write');$('#tP').classList.toggle('on',t==='view');if(t==='view')setTimeout(fit,0)}
 $('#tW').onclick=()=>setTab('write');$('#tP').onclick=()=>setTab('view');
 function fit(){
@@ -196,6 +203,7 @@ function fit(){
 }
 addEventListener('resize',fit);
 
+/* ---------- تحميل المحفوظ ---------- */
 function load(){
   try{const d=JSON.parse(localStorage.getItem('mustaqbal3')||'null');if(d)S={...S,...d}}catch(e){}
   if(![0,1,2].includes(S.frame))S.frame=1;
@@ -205,8 +213,13 @@ function load(){
   setAlign(S.align);applyFrame();meter();
 }
 
+/* ---------- التصدير (مضبوط بالكامل ليتوافق مع سفاري وجيت هاب) ---------- */
 async function render(scale){
-  try { if (document.fonts && document.fonts.ready) { await document.fonts.ready; } } catch(e){}
+  try {
+    if (document.fonts && document.fonts.ready) {
+      await document.fonts.ready;
+    }
+  } catch(e){}
 
   const wrap = document.createElement('div');
   wrap.style.cssText = 'position:fixed;left:-10000px;top:0;width:900px;height:1273px;z-index:999999;direction:rtl;';
@@ -220,7 +233,8 @@ async function render(scale){
     el.style.direction = 'rtl';
     el.style.textAlign = 'right';
     el.style.letterSpacing = '0px';
-    el.style.fontFamily = "'Geeza Pro', 'Arial', sans-serif";
+    el.style.fontFamily = "'Amiri', sans-serif";
+    el.style.unicodeBidi = 'plaintext';
   });
 
   const bi = c.querySelector('#bodyIn');
@@ -232,7 +246,8 @@ async function render(scale){
     bi.style.direction = 'rtl';
     bi.style.textAlign = S.align;
     bi.style.letterSpacing = '0px';
-    bi.style.fontFamily = "'Geeza Pro', 'Arial', sans-serif";
+    bi.style.fontFamily = "'Amiri', sans-serif";
+    bi.style.unicodeBidi = 'plaintext';
   }
   
   wrap.appendChild(c);
@@ -268,16 +283,16 @@ function download(blob,name){
 
 $('#bImg').onclick=async()=>{
   try{
-    toast('جاري التجهيز...');const canvas = await render(3);
-    canvas.toBlob(b=>{download(b,fname()+'.png');toast('تم تنزيل الصورة')},'image/png');
+    toast('جاري التجهيز...');const c=await render(3);
+    c.toBlob(b=>{download(b,fname()+'.png');toast('تم تنزيل الصورة')},'image/png');
   }catch(e){toast('صار خطأ، جرب مرة ثانية')}
 };
 
 $('#bPdf').onclick=async()=>{
   try{
-    toast('جاري التجهيز...');const canvas = await render(2);
+    toast('جاري التجهيز...');const c=await render(2);
     const pdf=new jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-    pdf.addImage(canvas.toDataURL('image/jpeg',0.95),'JPEG',0,0,210,297);
+    pdf.addImage(c.toDataURL('image/jpeg',0.95),'JPEG',0,0,210,297);
     download(pdf.output('blob'),fname()+'.pdf');toast('تم تنزيل PDF');
   }catch(e){toast('صار خطأ، جرب مرة ثانية')}
 };
