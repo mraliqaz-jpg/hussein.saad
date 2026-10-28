@@ -56,7 +56,7 @@ textarea.in{resize:none;line-height:1.7;height:210px}
 .fr .th span{font-size:24px;color:#999}
 #preview{position:sticky;top:12px;display:flex;justify-content:center}
 #holder{position:relative}
-#stage{position:absolute;top:0;left:0;width:900px;height:1273px;background:#fff;transform-origin:top left;box-shadow:0 3px 18px rgba(0,0,0,.28);overflow:hidden;color:#000}
+#stage{position:absolute;top:0;left:0;width:900px;height:1273px;background:#fff;transform-origin:top left;box-shadow:0 3px 18px rgba(0,0,0,.28);overflow:hidden;color:#000;direction:rtl;text-align:right;}
 #stage,#stage *{font-family:var(--pf);font-weight:600;color:#000;letter-spacing:0}
 .pt{font-size:30px;line-height:44px}
 #frame{position:absolute;inset:0;pointer-events:none}
@@ -64,13 +64,13 @@ textarea.in{resize:none;line-height:1.7;height:210px}
 .abs{position:absolute;white-space:nowrap}
 .hd{height:44px}
 .hr{right:140px}
-.hl{left:58px;width:330px;display:flex;overflow:hidden;align-items:center}
+.hl{left:58px;width:330px;display:flex;overflow:hidden;align-items:center;direction:rtl;}
 .hl>span{flex:none}
-.row{left:80px;width:740px;display:flex;justify-content:center;align-items:center;overflow:hidden;height:44px}
+.row{left:80px;width:740px;display:flex;justify-content:center;align-items:center;overflow:hidden;height:44px;direction:rtl;}
 .row>span{flex:none}
 .row .sep{display:none;margin:0 10px}.row .sep.show{display:inline}
 .ft{left:120px;width:400px;text-align:center}
-#pbody{position:absolute;left:85px;top:404px;width:730px;height:624px;overflow:hidden}
+#pbody{position:absolute;left:85px;top:404px;width:730px;height:624px;overflow:hidden;direction:rtl;}
 #bodyIn{white-space:pre-wrap;overflow-wrap:normal;word-break:normal;font-size:30px;line-height:44px;text-align:right;direction:rtl}
 [data-for]{cursor:pointer}
 #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:9px 16px;border-radius:20px;font-size:14px;opacity:0;transition:.3s;pointer-events:none;z-index:30}
@@ -288,7 +288,7 @@ function load(){
   setAlign(S.align);applyFrame();meter();
 }
 
-/* ---------- التصدير (متوافقة 100% مع أبل وسفاري) ---------- */
+/* ---------- التصدير (مثبتة لمتصفح سفاري وأجهزة أبل) ---------- */
 async function render(scale){
   try {
     if (document.fonts && document.fonts.ready) {
@@ -297,25 +297,34 @@ async function render(scale){
   } catch(e){}
 
   const wrap = document.createElement('div');
-  wrap.style.cssText = 'position:fixed;left:-10000px;top:0;width:900px;height:1273px;z-index:999999;';
+  wrap.style.cssText = 'position:fixed;left:-10000px;top:0;width:900px;height:1273px;z-index:999999;direction:rtl;';
   
   const c = stage.cloneNode(true);
   c.removeAttribute('id');
-  c.style.cssText = 'position:absolute;top:0;left:0;width:900px;height:1273px;transform:none;box-shadow:none;background:#fff;overflow:hidden;';
+  c.style.cssText = 'position:absolute;top:0;left:0;width:900px;height:1273px;transform:none;box-shadow:none;background:#fff;overflow:hidden;direction:rtl;';
   
+  // فرض الاتجاه الصحيح يميناً لليسار ومنع انعكاس الحروف في محرك سفاري
+  const allElements = c.querySelectorAll('*');
+  allElements.forEach(el => {
+    el.style.direction = 'rtl';
+    el.style.textAlign = 'right';
+    el.style.fontFamily = "'Geeza Pro', 'Noto Naskh Arabic', sans-serif";
+  });
+
   const bi = c.querySelector('#bodyIn');
   if(bi){
     bi.textContent = S.body + (/\n$/.test(S.body) ? '\u200b' : '');
     bi.style.overflowWrap = 'normal';
     bi.style.wordBreak = 'normal';
     bi.style.lineHeight = '44px';
+    bi.style.direction = 'rtl';
+    bi.style.textAlign = S.align;
     bi.style.fontFamily = "'Geeza Pro', 'Noto Naskh Arabic', sans-serif";
   }
   
   wrap.appendChild(c);
   document.body.appendChild(wrap);
 
-  // وقت انتظار كافٍ لمحرك سفاري على الايباد لبناء الحروف العربية بدقة
   await new Promise(resolve => setTimeout(resolve, 800));
 
   try{
