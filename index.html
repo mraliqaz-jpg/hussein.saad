@@ -288,7 +288,7 @@ function load(){
   setAlign(S.align);applyFrame();meter();
 }
 
-/* ---------- التصدير (مثبتة لمتصفح سفاري وأجهزة أبل) ---------- */
+/* ---------- التصدير (معدلة لمنع تقطيع وحك الحروف في سفاري) ---------- */
 async function render(scale){
   try {
     if (document.fonts && document.fonts.ready) {
@@ -303,11 +303,12 @@ async function render(scale){
   c.removeAttribute('id');
   c.style.cssText = 'position:absolute;top:0;left:0;width:900px;height:1273px;transform:none;box-shadow:none;background:#fff;overflow:hidden;direction:rtl;';
   
-  // فرض الاتجاه الصحيح يميناً لليسار ومنع انعكاس الحروف في محرك سفاري
+  // معالجة العناصر لمنع تشابك وتفكيك الحروف في محرك سفاري
   const allElements = c.querySelectorAll('*');
   allElements.forEach(el => {
     el.style.direction = 'rtl';
     el.style.textAlign = 'right';
+    el.style.letterSpacing = '0px';
     el.style.fontFamily = "'Geeza Pro', 'Noto Naskh Arabic', sans-serif";
   });
 
@@ -319,13 +320,15 @@ async function render(scale){
     bi.style.lineHeight = '44px';
     bi.style.direction = 'rtl';
     bi.style.textAlign = S.align;
+    bi.style.letterSpacing = '0px';
     bi.style.fontFamily = "'Geeza Pro', 'Noto Naskh Arabic', sans-serif";
   }
   
   wrap.appendChild(c);
   document.body.appendChild(wrap);
 
-  await new Promise(resolve => setTimeout(resolve, 800));
+  // إعطاء وقت أطول واستقرار كامل لمتصفح سفاري لترتيب الحروف العربية المتصلة
+  await new Promise(resolve => setTimeout(resolve, 1000));
 
   try{
     return await html2canvas(c, {
