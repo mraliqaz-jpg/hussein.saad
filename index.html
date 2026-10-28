@@ -71,7 +71,7 @@ textarea.in{resize:none;line-height:1.7;height:210px}
 .row .sep{display:none;margin:0 10px}.row .sep.show{display:inline}
 .ft{left:120px;width:400px;text-align:center}
 #pbody{position:absolute;left:85px;top:404px;width:730px;height:624px;overflow:hidden}
-#bodyIn{white-space:pre-wrap;overflow-wrap:normal;word-break:normal;font-size:30px;line-height:42px;text-align:right;direction:rtl}
+#bodyIn{white-space:pre-wrap;overflow-wrap:normal;word-break:normal;font-size:30px;line-height:44px;text-align:right;direction:rtl}
 [data-for]{cursor:pointer}
 #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:9px 16px;border-radius:20px;font-size:14px;opacity:0;transition:.3s;pointer-events:none;z-index:30}
 #toast.show{opacity:1}
@@ -166,7 +166,7 @@ textarea.in{resize:none;line-height:1.7;height:210px}
 <script>
 const $=s=>document.querySelector(s);
 const stage=$('#stage'),holder=$('#holder'),app=$('#app');
-const MAXLINES=16,LH=39;
+const MAXLINES=16,LH=44;
 let S={num:'',date:'',to:'',subj:'',body:'',align:'right',size:30,frame:1};
 let tt;
 
@@ -288,7 +288,7 @@ function load(){
   setAlign(S.align);applyFrame();meter();
 }
 
-/* ---------- التصدير (المعدلة خصيصاً لأجهزة أبل والأيباد) ---------- */
+/* ---------- التصدير (متوافقة 100% مع أبل وسفاري) ---------- */
 async function render(scale){
   try {
     if (document.fonts && document.fonts.ready) {
@@ -308,14 +308,15 @@ async function render(scale){
     bi.textContent = S.body + (/\n$/.test(S.body) ? '\u200b' : '');
     bi.style.overflowWrap = 'normal';
     bi.style.wordBreak = 'normal';
-    bi.style.lineHeight = '42px';
+    bi.style.lineHeight = '44px';
+    bi.style.fontFamily = "'Geeza Pro', 'Noto Naskh Arabic', sans-serif";
   }
   
   wrap.appendChild(c);
   document.body.appendChild(wrap);
 
-  // منح متصفح سفاري والأيباد وقتاً كافياً (600ms) لاستقرار تركيب الخط العربي
-  await new Promise(resolve => setTimeout(resolve, 600));
+  // وقت انتظار كافٍ لمحرك سفاري على الايباد لبناء الحروف العربية بدقة
+  await new Promise(resolve => setTimeout(resolve, 800));
 
   try{
     return await html2canvas(c, {
@@ -360,7 +361,6 @@ $('#bPdf').onclick=async()=>{
 };
 
 load();fit();
-if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{FIELDS.forEach(f=>f.apply(S[f.k]));applyBody(S.body);meter();fit()});
 </script>
 </body>
 </html>
